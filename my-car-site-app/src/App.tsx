@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import Header from "./components/header/Header";
-import CarFilter from "./components/menus/carFilter/CarFilter";
+import {CarFilter} from "./components/menus/carFilter/index";
 
 function App() {
   return (
