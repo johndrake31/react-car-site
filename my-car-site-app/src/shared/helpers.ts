@@ -77,21 +77,21 @@ export const filterCars = (searchObj: ICarSearch, carArr: ICarPublication[])=> {
 
   // if kilometers is set do the 5th filter
 
-  // if (kilometers) {
-  //   filterTable = filterTable.filter((carAd: ICarPublication) =>
-  //     +carAd.kilometers >= kilometers[0] && +carAd.kilometers <= kilometers[1]
-  //   );
-  // }
+  if (kilometers) {
+    filterTable = filterTable.filter((carAd: ICarPublication) =>
+      carAd.kilometers >= kilometers[0] && carAd.kilometers <= kilometers[1]
+    );
+  }
 
   // if price is set do the 5th filter
 
-  // if (price) {
-  //   filterTable = filterTable.filter((carAd: ICarPublication) =>
-  //     carAd.price >= price[0] && +carAd.price <= price[1]
-  //   );
-  // }
+  if (price) {
+    filterTable = filterTable.filter((carAd: ICarPublication) =>
+      carAd.price >= price[0] && carAd.price <= price[1]
+    );
+  }
 
-  
+  // Testing logs
   console.log(carArr);
   console.log(filterTable);
   

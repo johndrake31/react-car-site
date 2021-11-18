@@ -11,9 +11,10 @@ import {
   isDisabled,
   valueText,
   sortHighLow,
-  filterCars
+  filterCars,
 } from "../../../../shared/helpers";
 
+// 3rd Party
 import {
   Box,
   Button,
@@ -25,7 +26,6 @@ import {
   Slider,
 } from "@mui/material";
 
-
 interface IClicked {
   isClickedYr: boolean;
   isClickedKm: boolean;
@@ -34,10 +34,11 @@ interface IClicked {
 
 /**
  *
- * THE Dispare Starts here
+ * The dark dispare starts here....
  *
  */
 export const CarFilter = () => {
+  // STATE
   const [brands, setBrands] = React.useState<string[]>([]);
   const [models, setModels] = React.useState<string[]>([]);
   const [fuelTypes, setFuelTypes] = useState<string[]>([
@@ -79,24 +80,50 @@ export const CarFilter = () => {
     },
   ]);
 
+  const [carClassifiedsHolder, setCarClassifiedsHolder] = useState<ICarPublication[]>([
+    {
+      id: 3,
+      title: "Tesla X-Wing White 2021",
+      description:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi vel dignissimos sequi harum laboriosam maxime obcaecati est tempore ad debitis ullam minus similique fugit, enim animi consequuntur exercitationem illo eos.",
+      year: "2021-09-06T00:00:00+00:00",
+      kilometers: 123456677,
+      brand: "Tesla",
+      model: "X-wing",
+      fuel: "hybrid",
+      price: 555,
+      image: "tesla-M-X-2021-white-16-32-55-6137509b0127f.jpg",
+      garage: [],
+      user: [],
+    },
+  ]);
+
+
   useEffect(() => {
     fetch("http://vps-dd09afd2.vps.ovh.net:7777/api/classified")
       .then((res) => res.json())
       .then((data: any) => {
         //will be passed later to carClassfied Component
-        setCarClassifieds(data.ads);
-        setBrands(filterNewSet(data.ads, "brand"));
+        setCarClassifiedsHolder(data.ads)
+        handlePageLoad(data.ads);
       });
   }, []);
 
+  //METHODES
+  const handlePageLoad = (data: any) => {
+    setCarClassifieds(data);
+    setBrands(filterNewSet(data, "brand"));
+  };
+
+  // function to handle boolean based button clickes and state
   const handleIsClicked = (val: keyof IClicked) => {
     const boolObj = { ...isClicked };
     boolObj[val] ? (boolObj[val] = false) : (boolObj[val] = true);
     setIsClicked(boolObj);
   };
+
   /**
    * Handle the change of the brand and modify the list of models according to selected brand
-   *
    * @param event
    */
   const handleBrandChange = (event: SelectChangeEvent) => {
@@ -111,11 +138,6 @@ export const CarFilter = () => {
     setModels(filterNewSet(tempArr, "model"));
   };
 
-  /**
-   * Handle the change of the brand and modify the list of models according to selected brand
-   *
-   * @param event
-   */
   const handleModelChange = (event: SelectChangeEvent) => {
     const modelName = event.target.value as string;
     setModel(modelName);
@@ -124,20 +146,24 @@ export const CarFilter = () => {
   const handleFuelTypeChange = (event: SelectChangeEvent) => {
     setFuelType(event.target.value as string);
   };
+
   const handleYearChange = (event: Event, newValue: number | number[]) => {
     setYear(newValue as number[]);
   };
+
   const handleKilometersChange = (
     event: Event,
     newValue: number | number[]
   ) => {
     setKilometers(newValue as number[]);
   };
+
   const handlePriceChange = (event: Event, newValue: number | number[]) => {
     setPrice(newValue as number[]);
   };
 
   const handleSubmit = () => {
+   
     const searchObj: ICarSearch = {
       brand: brand,
       model: model,
@@ -146,11 +172,8 @@ export const CarFilter = () => {
       kilometers: sortHighLow(kilometers[0], kilometers[1]),
       price: sortHighLow(price[0], price[1]),
     };
-    
-    
 
-     return filterCars(searchObj, carClassifieds )
-
+    setCarClassifieds( filterCars(searchObj, carClassifiedsHolder))
   };
 
   return (
@@ -193,7 +216,7 @@ export const CarFilter = () => {
             ))}
         </Select>
       </FormControl>
-     
+
       <FormControl sx={{ m: 1, minWidth: 120 }}>
         {/* Fuel Type */}
         <InputLabel id="fuel-type-select-label">Fuel Type</InputLabel>
@@ -365,6 +388,15 @@ export const CarFilter = () => {
         }}
       >
         Submit
+      </Button>
+      <Button
+        className="submit-btn"
+        sx={{}}
+        onClick={() => {
+          handlePageLoad(carClassifiedsHolder);
+        }}
+      >
+        reset
       </Button>
     </Box>
   );
