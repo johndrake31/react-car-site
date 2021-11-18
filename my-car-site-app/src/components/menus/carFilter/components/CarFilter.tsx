@@ -6,7 +6,13 @@ import { ICarPublication } from "../../../../types/ICarPublication";
 import { ICarSearch } from "../../../../types/ICarSearch";
 
 //Helpers
-import {filterNewSet, isDisabled} from '../../../../shared/helpers';
+import {
+  filterNewSet,
+  isDisabled,
+  valueText,
+  sortHighLow,
+} from "../../../../shared/helpers";
+import {theme} from "../../../../shared/theme";
 
 import {
   Box,
@@ -16,18 +22,21 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  Slider,
+  Typography,
 } from "@mui/material";
+
 
 export const CarFilter = () => {
   const [brands, setBrands] = React.useState<string[]>([]);
   const [models, setModels] = React.useState<string[]>([]);
   const [fuelTypes, setFuelTypes] = useState<string[]>([]);
+  const [year, setYear] = React.useState([1920, new Date().getFullYear()]);
 
   //Search Values and Select Inputs
   const [brand, setBrand] = React.useState<string>("");
   const [model, setModel] = useState("");
   const [fuelType, setFuelType] = useState("");
-
 
   const [carClassifieds, setCarClassifieds] = useState<ICarPublication[]>([
     {
@@ -46,7 +55,10 @@ export const CarFilter = () => {
       user: [],
     },
   ]);
- 
+
+
+  
+
   useEffect(() => {
     fetch("http://vps-dd09afd2.vps.ovh.net:7777/api/classified")
       .then((res) => res.json())
@@ -69,38 +81,39 @@ export const CarFilter = () => {
     const tempArr = carClassifieds.filter(
       (it) => it.brand.toLocaleLowerCase() === brandName.toLocaleLowerCase()
     );
-    setFuelTypes([...new Set(tempArr.map(it =>it.fuel ))]);
+    //unique set of fuel types filtered
+    setFuelTypes([...new Set(tempArr.map((it) => it.fuel))]);
     setModels(filterNewSet(tempArr, "model"));
   };
 
-/**
- * Handle the change of the brand and modify the list of models according to selected brand
- * 
- * @param event
- */
+  /**
+   * Handle the change of the brand and modify the list of models according to selected brand
+   *
+   * @param event
+   */
   const handleModelChange = (event: SelectChangeEvent) => {
     const modelName = event.target.value as string;
     setModel(modelName);
-    console.log(modelName);
   };
 
   const handleFuelTypeChange = (event: SelectChangeEvent) => {
     setFuelType(event.target.value as string);
-    console.log(event.target.value);
+  };
+  const handleYearChange = (event: Event, newValue: number | number[]) => {
+    setYear(newValue as number[]);
   };
 
-  const handleSubmit = ()=>{
-    const searchObj:ICarSearch = {
+  const handleSubmit = () => {
+    const searchObj: ICarSearch = {
       brand: brand,
       model: model,
       fuelType: fuelType,
-      years: "",
+      years: sortHighLow(year[0], year[1]),
       Kilometers: "",
-      price: '',
-    }
+      price: "",
+    };
     console.log(searchObj);
-    
-  }
+  };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -150,6 +163,7 @@ export const CarFilter = () => {
       <FormControl sx={{ m: 1, minWidth: 120 }}>
         {/* Fuel Type */}
         <InputLabel id="fuel-type-select-label">Fuel Type</InputLabel>
+
         <Select
           labelId="fuel-type-select-label"
           id="fuel-simple-select"
@@ -166,8 +180,32 @@ export const CarFilter = () => {
         </Select>
       </FormControl>
 
+      <FormControl sx={{ m: 1, minWidth: 120 }}>
+        <Typography id="Year-slider-label">
+          {year[0] > year[1]
+            ? `${year[1]}yr - ${year[0]}yr`
+            : `${year[0]}yr - ${year[1]}yr`}
+        </Typography>
+        <Slider
+          getAriaLabel={() => "year range"}
+          defaultValue={new Date().getFullYear()}
+          color= "primary"
+          value={year}
+          onChange={handleYearChange}
+          valueLabelDisplay="auto"
+          getAriaValueText={valueText}
+          max={new Date().getFullYear()}
+          min={1920}
+        />
+      </FormControl>
       {/* SLIDERS */}
-      <Button onClick={()=>{handleSubmit()}}>Submit</Button>
+      <Button
+        onClick={() => {
+          handleSubmit();
+        }}
+      >
+        Submit
+      </Button>
     </Box>
   );
 };
