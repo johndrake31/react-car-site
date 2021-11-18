@@ -3,6 +3,6 @@ export interface ICarSearch{
       model: string,
       fuelType: string,
       years:number[],
-      Kilometers: number[],
+      kilometers: number[],
       price: number[],
 }

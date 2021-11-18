@@ -11,6 +11,7 @@ import {
   isDisabled,
   valueText,
   sortHighLow,
+  filterCars
 } from "../../../../shared/helpers";
 
 import {
@@ -142,10 +143,14 @@ export const CarFilter = () => {
       model: model,
       fuelType: fuelType,
       years: sortHighLow(year[0], year[1]),
-      Kilometers: sortHighLow(kilometers[0], kilometers[1]),
+      kilometers: sortHighLow(kilometers[0], kilometers[1]),
       price: sortHighLow(price[0], price[1]),
     };
-    console.log(searchObj);
+    
+    
+
+     return filterCars(searchObj, carClassifieds )
+
   };
 
   return (
@@ -170,9 +175,6 @@ export const CarFilter = () => {
         </Select>
       </FormControl>
 
-      <br />
-      <br />
-
       <FormControl sx={{ m: 1, minWidth: 120 }} {...isDisabled(brand)}>
         {/* Model */}
         <InputLabel id="Model-simple-select-label">Model</InputLabel>
@@ -191,12 +193,10 @@ export const CarFilter = () => {
             ))}
         </Select>
       </FormControl>
-      <br />
-      <br />
+     
       <FormControl sx={{ m: 1, minWidth: 120 }}>
         {/* Fuel Type */}
         <InputLabel id="fuel-type-select-label">Fuel Type</InputLabel>
-
         <Select
           labelId="fuel-type-select-label"
           id="fuel-simple-select"
