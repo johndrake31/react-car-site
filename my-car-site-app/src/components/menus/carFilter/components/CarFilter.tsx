@@ -12,7 +12,6 @@ import {
   valueText,
   sortHighLow,
 } from "../../../../shared/helpers";
-import {theme} from "../../../../shared/theme";
 
 import {
   Box,
@@ -23,20 +22,43 @@ import {
   Select,
   SelectChangeEvent,
   Slider,
-  Typography,
 } from "@mui/material";
 
 
+interface IClicked {
+  isClickedYr: boolean;
+  isClickedKm: boolean;
+  isClickedPrice: boolean;
+}
+
+/**
+ *
+ * THE Dispare Starts here
+ *
+ */
 export const CarFilter = () => {
   const [brands, setBrands] = React.useState<string[]>([]);
   const [models, setModels] = React.useState<string[]>([]);
-  const [fuelTypes, setFuelTypes] = useState<string[]>([]);
+  const [fuelTypes, setFuelTypes] = useState<string[]>([
+    "ELECTRIC",
+    "GASOLINE",
+    "DIESEL",
+    "HYBRID",
+  ]);
   const [year, setYear] = React.useState([1920, new Date().getFullYear()]);
+  const [kilometers, setKilometers] = React.useState([0, 400000]);
+  const [price, setPrice] = React.useState([0, 400000]);
 
   //Search Values and Select Inputs
   const [brand, setBrand] = React.useState<string>("");
   const [model, setModel] = useState("");
   const [fuelType, setFuelType] = useState("");
+  const [isClicked, setIsClicked] = useState<IClicked>({
+    isClickedYr: false,
+    isClickedKm: false,
+    isClickedPrice: false,
+  });
+  const { isClickedYr, isClickedKm, isClickedPrice } = isClicked;
 
   const [carClassifieds, setCarClassifieds] = useState<ICarPublication[]>([
     {
@@ -56,9 +78,6 @@ export const CarFilter = () => {
     },
   ]);
 
-
-  
-
   useEffect(() => {
     fetch("http://vps-dd09afd2.vps.ovh.net:7777/api/classified")
       .then((res) => res.json())
@@ -69,6 +88,11 @@ export const CarFilter = () => {
       });
   }, []);
 
+  const handleIsClicked = (val: keyof IClicked) => {
+    const boolObj = { ...isClicked };
+    boolObj[val] ? (boolObj[val] = false) : (boolObj[val] = true);
+    setIsClicked(boolObj);
+  };
   /**
    * Handle the change of the brand and modify the list of models according to selected brand
    *
@@ -102,6 +126,15 @@ export const CarFilter = () => {
   const handleYearChange = (event: Event, newValue: number | number[]) => {
     setYear(newValue as number[]);
   };
+  const handleKilometersChange = (
+    event: Event,
+    newValue: number | number[]
+  ) => {
+    setKilometers(newValue as number[]);
+  };
+  const handlePriceChange = (event: Event, newValue: number | number[]) => {
+    setPrice(newValue as number[]);
+  };
 
   const handleSubmit = () => {
     const searchObj: ICarSearch = {
@@ -109,8 +142,8 @@ export const CarFilter = () => {
       model: model,
       fuelType: fuelType,
       years: sortHighLow(year[0], year[1]),
-      Kilometers: "",
-      price: "",
+      Kilometers: sortHighLow(kilometers[0], kilometers[1]),
+      price: sortHighLow(price[0], price[1]),
     };
     console.log(searchObj);
   };
@@ -131,7 +164,7 @@ export const CarFilter = () => {
           {brands &&
             brands.map((brandname, key) => (
               <MenuItem key={key} value={brandname}>
-                {brandname}
+                {brandname.toLocaleUpperCase()}
               </MenuItem>
             ))}
         </Select>
@@ -153,7 +186,7 @@ export const CarFilter = () => {
           {models &&
             models.map((modelName, key) => (
               <MenuItem key={key} value={modelName}>
-                {modelName}
+                {modelName.toLocaleUpperCase()}
               </MenuItem>
             ))}
         </Select>
@@ -174,32 +207,159 @@ export const CarFilter = () => {
           {fuelTypes &&
             fuelTypes.map((fuelName, key) => (
               <MenuItem key={key} value={fuelName}>
-                {fuelName}
+                {fuelName.toLocaleUpperCase()}
               </MenuItem>
             ))}
         </Select>
       </FormControl>
 
-      <FormControl sx={{ m: 1, minWidth: 120 }}>
-        <Typography id="Year-slider-label">
-          {year[0] > year[1]
-            ? `${year[1]}yr - ${year[0]}yr`
-            : `${year[0]}yr - ${year[1]}yr`}
-        </Typography>
-        <Slider
-          getAriaLabel={() => "year range"}
-          defaultValue={new Date().getFullYear()}
-          color= "primary"
-          value={year}
-          onChange={handleYearChange}
-          valueLabelDisplay="auto"
-          getAriaValueText={valueText}
-          max={new Date().getFullYear()}
-          min={1920}
-        />
-      </FormControl>
-      {/* SLIDERS */}
+      {/* 
+      
+        SLIDERS
+
+      */}
+      <Box sx={{ display: "flex" }}>
+        {/* BUTTON YEAR */}
+        {!isClickedYr ? (
+          <Button
+            sx={{ m: 1, backgroundColor: "black" }}
+            variant="contained"
+            onClick={() => {
+              handleIsClicked("isClickedYr");
+            }}
+          >
+            {year[0] > year[1]
+              ? `${year[1]} - ${year[0]}`
+              : `${year[0]} - ${year[1]}`}{" "}
+            YR
+          </Button>
+        ) : (
+          isClickedYr && (
+            <FormControl sx={{ m: 1, minWidth: 120 }}>
+              <Slider
+                sx={{
+                  color: "black",
+                  "& .MuiSlider-rail": { color: "blue" },
+                }}
+                getAriaLabel={() => "year range"}
+                defaultValue={new Date().getFullYear()}
+                color="primary"
+                value={year}
+                onChange={handleYearChange}
+                valueLabelDisplay="auto"
+                getAriaValueText={valueText}
+                max={new Date().getFullYear()}
+                min={1920}
+              />
+              <Button
+                size="small"
+                onClick={() => {
+                  handleIsClicked("isClickedYr");
+                }}
+              >
+                x
+              </Button>
+            </FormControl>
+          )
+        )}
+      </Box>
+
+      {/* Slider KILOMETER */}
+      <Box sx={{ display: "flex" }}>
+        {/* BUTTON Kilometers */}
+        {!isClickedKm ? (
+          <Button
+            sx={{ m: 1, backgroundColor: "black" }}
+            variant="contained"
+            onClick={() => {
+              handleIsClicked("isClickedKm");
+            }}
+          >
+            {kilometers[0] > kilometers[1]
+              ? `${kilometers[1]} - ${kilometers[0]}`
+              : `${kilometers[0]} - ${kilometers[1]}`}{" "}
+            KM
+          </Button>
+        ) : (
+          isClickedKm && (
+            <FormControl sx={{ m: 1, minWidth: 120 }}>
+              <Slider
+                sx={{
+                  color: "black",
+                  "& .MuiSlider-rail": { color: "blue" },
+                }}
+                getAriaLabel={() => "km range"}
+                defaultValue={120000}
+                color="primary"
+                value={kilometers}
+                onChange={handleKilometersChange}
+                valueLabelDisplay="auto"
+                getAriaValueText={valueText}
+                max={400000}
+                min={0}
+              />
+              <Button
+                size="small"
+                onClick={() => {
+                  handleIsClicked("isClickedKm");
+                }}
+              >
+                x
+              </Button>
+            </FormControl>
+          )
+        )}
+      </Box>
+      {/* Slider KILOMETER */}
+      <Box sx={{ display: "flex" }}>
+        {/* BUTTON Kilometers */}
+        {!isClickedPrice ? (
+          <Button
+            sx={{ m: 1, backgroundColor: "black" }}
+            variant="contained"
+            onClick={() => {
+              handleIsClicked("isClickedPrice");
+            }}
+          >
+            {price[0] > price[1]
+              ? `${price[1]} - ${price[0]}`
+              : `${price[0]} - ${price[1]}`}{" "}
+            €
+          </Button>
+        ) : (
+          isClickedPrice && (
+            <FormControl sx={{ m: 1, minWidth: 120 }}>
+              <Slider
+                sx={{
+                  color: "black",
+                  "& .MuiSlider-rail": { color: "blue" },
+                }}
+                getAriaLabel={() => "price range"}
+                defaultValue={12000}
+                color="primary"
+                value={price}
+                onChange={handlePriceChange}
+                valueLabelDisplay="auto"
+                getAriaValueText={valueText}
+                max={400000}
+                min={0}
+              />
+              <Button
+                size="small"
+                onClick={() => {
+                  handleIsClicked("isClickedPrice");
+                }}
+              >
+                x
+              </Button>
+            </FormControl>
+          )
+        )}
+      </Box>
+
       <Button
+        className="submit-btn"
+        sx={{}}
         onClick={() => {
           handleSubmit();
         }}
