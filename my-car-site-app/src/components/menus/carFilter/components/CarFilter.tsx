@@ -111,6 +111,9 @@ export const CarFilter = () => {
 
   //METHODES
   const handlePageLoad = (data: any) => {
+    setBrand('');
+    setModel('');
+    setFuelType('');
     setCarClassifieds(data);
     setBrands(filterNewSet(data, "brand"));
   };
