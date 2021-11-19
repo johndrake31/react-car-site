@@ -37,7 +37,8 @@ interface IClicked {
  * The dark dispare starts here....
  *
  */
-export const CarFilter = (carsListing:ICarPublication[]) => {
+export const CarFilter = (props: any) => {
+  const { cars, onFilterChange, onReset } = props;
   // STATE
   const [brands, setBrands] = React.useState<string[]>([]);
   const [models, setModels] = React.useState<string[]>([]);
@@ -55,6 +56,7 @@ export const CarFilter = (carsListing:ICarPublication[]) => {
   const [brand, setBrand] = React.useState<string>("");
   const [model, setModel] = useState("");
   const [fuelType, setFuelType] = useState("");
+
   const [isClicked, setIsClicked] = useState<IClicked>({
     isClickedYr: false,
     isClickedKm: false,
@@ -80,7 +82,9 @@ export const CarFilter = (carsListing:ICarPublication[]) => {
     },
   ]);
 
-  const [carClassifiedsHolder, setCarClassifiedsHolder] = useState<ICarPublication[]>([
+  const [carClassifiedsHolder, setCarClassifiedsHolder] = useState<
+    ICarPublication[]
+  >([
     {
       id: 3,
       title: "Tesla X-Wing White 2021",
@@ -98,25 +102,25 @@ export const CarFilter = (carsListing:ICarPublication[]) => {
     },
   ]);
 
-
   useEffect(() => {
-        //will be passed later to carClassfied Component
-        console.log(carsListing);
-        
-        //setCarClassifiedsHolder([...carsListing])
-        //handlePageLoad([...carsListing]);
-      
-  }, [carsListing]);
+    //will be passed later to carClassfied Component
+    setCarClassifiedsHolder([...cars]);
+    handlePageLoad([...cars]);
+  }, [cars]);
 
   //METHODES
   const handlePageLoad = (data: any) => {
-    setBrand('');
-    setModel('');
-    setFuelType('');
+    setBrand("");
+    setModel("");
+    setFuelType("");
     setCarClassifieds(data);
     setBrands(filterNewSet(data, "brand"));
   };
 
+  const handleReset = () => {
+    handlePageLoad(carClassifiedsHolder);
+    onReset();
+  };
   // function to handle boolean based button clickes and state
   const handleIsClicked = (val: keyof IClicked) => {
     const boolObj = { ...isClicked };
@@ -165,7 +169,6 @@ export const CarFilter = (carsListing:ICarPublication[]) => {
   };
 
   const handleSubmit = () => {
-   
     const searchObj: ICarSearch = {
       brand: brand,
       model: model,
@@ -175,7 +178,8 @@ export const CarFilter = (carsListing:ICarPublication[]) => {
       price: sortHighLow(price[0], price[1]),
     };
 
-    setCarClassifieds( filterCars(searchObj, carClassifiedsHolder))
+    setCarClassifieds(filterCars(searchObj, carClassifiedsHolder));
+    onFilterChange(filterCars(searchObj, carClassifiedsHolder));
   };
 
   return (
@@ -395,7 +399,7 @@ export const CarFilter = (carsListing:ICarPublication[]) => {
         className="submit-btn"
         sx={{}}
         onClick={() => {
-          handlePageLoad(carClassifiedsHolder);
+          handleReset();
         }}
       >
         reset

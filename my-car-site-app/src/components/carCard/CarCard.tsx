@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { ICarPublication } from "../../types/ICarPublication";
 
+export const CarCard = (props: any) => {
+  const { carObj } = props;
+  const [car, setCar] = useState<ICarPublication>();
 
-export const CarCard = (props:ICarPublication)=>{
-    const [cars, setCars] = useState<ICarPublication[]>()
+  useEffect(() => {
+    setCar(carObj);
+  }, [carObj]);
 
-    useEffect(()=>{
-        console.log(props);
-        
-    },[])
-    return(
-        <h1>car cards here</h1>
-    )
-}
+  return <h1>{car?.title}</h1>;
+};

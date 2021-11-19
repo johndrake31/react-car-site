@@ -1,7 +1,7 @@
-export interface ICarPublication{
+export interface ICarPublication {
     id: number,
-    title:  string
-    description: string 
+    title: string
+    description: string
     year: string,
     kilometers: number,
     brand: string,
