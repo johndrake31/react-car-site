@@ -37,7 +37,7 @@ interface IClicked {
  * The dark dispare starts here....
  *
  */
-export const CarFilter = () => {
+export const CarFilter = (carsListing:ICarPublication[]) => {
   // STATE
   const [brands, setBrands] = React.useState<string[]>([]);
   const [models, setModels] = React.useState<string[]>([]);
@@ -100,14 +100,13 @@ export const CarFilter = () => {
 
 
   useEffect(() => {
-    fetch("http://vps-dd09afd2.vps.ovh.net:7777/api/classified")
-      .then((res) => res.json())
-      .then((data: any) => {
         //will be passed later to carClassfied Component
-        setCarClassifiedsHolder(data.ads)
-        handlePageLoad(data.ads);
-      });
-  }, []);
+        console.log(carsListing);
+        
+        //setCarClassifiedsHolder([...carsListing])
+        //handlePageLoad([...carsListing]);
+      
+  }, [carsListing]);
 
   //METHODES
   const handlePageLoad = (data: any) => {
