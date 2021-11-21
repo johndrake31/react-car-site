@@ -18,7 +18,9 @@ import {
 import {
   Box,
   Button,
+  Container,
   FormControl,
+  Grid,
   InputLabel,
   MenuItem,
   Select,
@@ -183,227 +185,231 @@ export const CarFilter = (props: any) => {
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
-      {/* SELECTS */}
-      <FormControl sx={{ m: 1, minWidth: 120 }}>
-        {/* Brand */}
-        <InputLabel id="brand-simple-select-label">Brand</InputLabel>
-        <Select
-          labelId="brand-simple-select-label"
-          id="brand-simple-select"
-          value={brand}
-          label="Brand"
-          onChange={handleBrandChange}
-        >
-          {brands &&
-            brands.map((brandname, key) => (
-              <MenuItem key={key} value={brandname}>
-                {brandname.toLocaleUpperCase()}
-              </MenuItem>
-            ))}
-        </Select>
-      </FormControl>
+    <Container sx={{ m: 1 }}>
+      <Grid container spacing={2}>
+        {/* <Box sx={{ display: "flex" }}> */}
+        {/* SELECTS */}
+        <FormControl sx={{ m: 1, minWidth: 120 }}>
+          {/* Brand */}
+          <InputLabel id="brand-simple-select-label">Brand</InputLabel>
+          <Select
+            labelId="brand-simple-select-label"
+            id="brand-simple-select"
+            value={brand}
+            label="Brand"
+            onChange={handleBrandChange}
+          >
+            {brands &&
+              brands.map((brandname, key) => (
+                <MenuItem key={key} value={brandname}>
+                  {brandname.toLocaleUpperCase()}
+                </MenuItem>
+              ))}
+          </Select>
+        </FormControl>
 
-      <FormControl sx={{ m: 1, minWidth: 120 }} {...isDisabled(brand)}>
-        {/* Model */}
-        <InputLabel id="Model-simple-select-label">Model</InputLabel>
-        <Select
-          labelId="Model-simple-select-label"
-          id="model-simple-select"
-          value={model}
-          label="Model"
-          onChange={handleModelChange}
-        >
-          {models &&
-            models.map((modelName, key) => (
-              <MenuItem key={key} value={modelName}>
-                {modelName.toLocaleUpperCase()}
-              </MenuItem>
-            ))}
-        </Select>
-      </FormControl>
+        <FormControl sx={{ m: 1, minWidth: 120 }} {...isDisabled(brand)}>
+          {/* Model */}
+          <InputLabel id="Model-simple-select-label">Model</InputLabel>
+          <Select
+            labelId="Model-simple-select-label"
+            id="model-simple-select"
+            value={model}
+            label="Model"
+            onChange={handleModelChange}
+          >
+            {models &&
+              models.map((modelName, key) => (
+                <MenuItem key={key} value={modelName}>
+                  {modelName.toLocaleUpperCase()}
+                </MenuItem>
+              ))}
+          </Select>
+        </FormControl>
 
-      <FormControl sx={{ m: 1, minWidth: 120 }}>
-        {/* Fuel Type */}
-        <InputLabel id="fuel-type-select-label">Fuel Type</InputLabel>
-        <Select
-          labelId="fuel-type-select-label"
-          id="fuel-simple-select"
-          value={fuelType}
-          label="FuelType"
-          onChange={handleFuelTypeChange}
-        >
-          {fuelTypes &&
-            fuelTypes.map((fuelName, key) => (
-              <MenuItem key={key} value={fuelName}>
-                {fuelName.toLocaleUpperCase()}
-              </MenuItem>
-            ))}
-        </Select>
-      </FormControl>
+        <FormControl sx={{ m: 1, minWidth: 120 }}>
+          {/* Fuel Type */}
+          <InputLabel id="fuel-type-select-label">Fuel Type</InputLabel>
+          <Select
+            labelId="fuel-type-select-label"
+            id="fuel-simple-select"
+            value={fuelType}
+            label="FuelType"
+            onChange={handleFuelTypeChange}
+          >
+            {fuelTypes &&
+              fuelTypes.map((fuelName, key) => (
+                <MenuItem key={key} value={fuelName}>
+                  {fuelName.toLocaleUpperCase()}
+                </MenuItem>
+              ))}
+          </Select>
+        </FormControl>
 
-      {/* 
+        {/* 
       
         SLIDERS
 
       */}
-      <Box sx={{ display: "flex" }}>
-        {/* BUTTON YEAR */}
-        {!isClickedYr ? (
-          <Button
-            sx={{ m: 1, backgroundColor: "black" }}
-            variant="contained"
-            onClick={() => {
-              handleIsClicked("isClickedYr");
-            }}
-          >
-            {year[0] > year[1]
-              ? `${year[1]} - ${year[0]}`
-              : `${year[0]} - ${year[1]}`}{" "}
-            YR
-          </Button>
-        ) : (
-          isClickedYr && (
-            <FormControl sx={{ m: 1, minWidth: 120 }}>
-              <Slider
-                sx={{
-                  color: "black",
-                  "& .MuiSlider-rail": { color: "blue" },
-                }}
-                getAriaLabel={() => "year range"}
-                defaultValue={new Date().getFullYear()}
-                color="primary"
-                value={year}
-                onChange={handleYearChange}
-                valueLabelDisplay="auto"
-                getAriaValueText={valueText}
-                max={new Date().getFullYear()}
-                min={1920}
-              />
-              <Button
-                size="small"
-                onClick={() => {
-                  handleIsClicked("isClickedYr");
-                }}
-              >
-                x
-              </Button>
-            </FormControl>
-          )
-        )}
-      </Box>
+        <Box sx={{ display: "flex" }}>
+          {/* BUTTON YEAR */}
+          {!isClickedYr ? (
+            <Button
+              sx={{ m: 1, backgroundColor: "black" }}
+              variant="contained"
+              onClick={() => {
+                handleIsClicked("isClickedYr");
+              }}
+            >
+              {year[0] > year[1]
+                ? `${year[1]} - ${year[0]}`
+                : `${year[0]} - ${year[1]}`}{" "}
+              YR
+            </Button>
+          ) : (
+            isClickedYr && (
+              <FormControl sx={{ m: 1, minWidth: 120 }}>
+                <Slider
+                  sx={{
+                    color: "black",
+                    "& .MuiSlider-rail": { color: "blue" },
+                  }}
+                  getAriaLabel={() => "year range"}
+                  defaultValue={new Date().getFullYear()}
+                  color="primary"
+                  value={year}
+                  onChange={handleYearChange}
+                  valueLabelDisplay="auto"
+                  getAriaValueText={valueText}
+                  max={new Date().getFullYear()}
+                  min={1920}
+                />
+                <Button
+                  size="small"
+                  onClick={() => {
+                    handleIsClicked("isClickedYr");
+                  }}
+                >
+                  x
+                </Button>
+              </FormControl>
+            )
+          )}
+        </Box>
 
-      {/* Slider KILOMETER */}
-      <Box sx={{ display: "flex" }}>
-        {/* BUTTON Kilometers */}
-        {!isClickedKm ? (
-          <Button
-            sx={{ m: 1, backgroundColor: "black" }}
-            variant="contained"
-            onClick={() => {
-              handleIsClicked("isClickedKm");
-            }}
-          >
-            {kilometers[0] > kilometers[1]
-              ? `${kilometers[1]} - ${kilometers[0]}`
-              : `${kilometers[0]} - ${kilometers[1]}`}{" "}
-            KM
-          </Button>
-        ) : (
-          isClickedKm && (
-            <FormControl sx={{ m: 1, minWidth: 120 }}>
-              <Slider
-                sx={{
-                  color: "black",
-                  "& .MuiSlider-rail": { color: "blue" },
-                }}
-                getAriaLabel={() => "km range"}
-                defaultValue={120000}
-                color="primary"
-                value={kilometers}
-                onChange={handleKilometersChange}
-                valueLabelDisplay="auto"
-                getAriaValueText={valueText}
-                max={400000}
-                min={0}
-              />
-              <Button
-                size="small"
-                onClick={() => {
-                  handleIsClicked("isClickedKm");
-                }}
-              >
-                x
-              </Button>
-            </FormControl>
-          )
-        )}
-      </Box>
-      {/* Slider KILOMETER */}
-      <Box sx={{ display: "flex" }}>
-        {/* BUTTON Kilometers */}
-        {!isClickedPrice ? (
-          <Button
-            sx={{ m: 1, backgroundColor: "black" }}
-            variant="contained"
-            onClick={() => {
-              handleIsClicked("isClickedPrice");
-            }}
-          >
-            {price[0] > price[1]
-              ? `${price[1]} - ${price[0]}`
-              : `${price[0]} - ${price[1]}`}{" "}
-            €
-          </Button>
-        ) : (
-          isClickedPrice && (
-            <FormControl sx={{ m: 1, minWidth: 120 }}>
-              <Slider
-                sx={{
-                  color: "black",
-                  "& .MuiSlider-rail": { color: "blue" },
-                }}
-                getAriaLabel={() => "price range"}
-                defaultValue={12000}
-                color="primary"
-                value={price}
-                onChange={handlePriceChange}
-                valueLabelDisplay="auto"
-                getAriaValueText={valueText}
-                max={400000}
-                min={0}
-              />
-              <Button
-                size="small"
-                onClick={() => {
-                  handleIsClicked("isClickedPrice");
-                }}
-              >
-                x
-              </Button>
-            </FormControl>
-          )
-        )}
-      </Box>
+        {/* Slider KILOMETER */}
+        <Box sx={{ display: "flex" }}>
+          {/* BUTTON Kilometers */}
+          {!isClickedKm ? (
+            <Button
+              sx={{ m: 1, backgroundColor: "black" }}
+              variant="contained"
+              onClick={() => {
+                handleIsClicked("isClickedKm");
+              }}
+            >
+              {kilometers[0] > kilometers[1]
+                ? `${kilometers[1]} - ${kilometers[0]}`
+                : `${kilometers[0]} - ${kilometers[1]}`}{" "}
+              KM
+            </Button>
+          ) : (
+            isClickedKm && (
+              <FormControl sx={{ m: 1, minWidth: 120 }}>
+                <Slider
+                  sx={{
+                    color: "black",
+                    "& .MuiSlider-rail": { color: "blue" },
+                  }}
+                  getAriaLabel={() => "km range"}
+                  defaultValue={120000}
+                  color="primary"
+                  value={kilometers}
+                  onChange={handleKilometersChange}
+                  valueLabelDisplay="auto"
+                  getAriaValueText={valueText}
+                  max={400000}
+                  min={0}
+                />
+                <Button
+                  size="small"
+                  onClick={() => {
+                    handleIsClicked("isClickedKm");
+                  }}
+                >
+                  x
+                </Button>
+              </FormControl>
+            )
+          )}
+        </Box>
+        {/* Slider KILOMETER */}
+        <Box sx={{ display: "flex" }}>
+          {/* BUTTON Kilometers */}
+          {!isClickedPrice ? (
+            <Button
+              sx={{ m: 1, backgroundColor: "black" }}
+              variant="contained"
+              onClick={() => {
+                handleIsClicked("isClickedPrice");
+              }}
+            >
+              {price[0] > price[1]
+                ? `${price[1]} - ${price[0]}`
+                : `${price[0]} - ${price[1]}`}{" "}
+              €
+            </Button>
+          ) : (
+            isClickedPrice && (
+              <FormControl sx={{ m: 1, minWidth: 120 }}>
+                <Slider
+                  sx={{
+                    color: "black",
+                    "& .MuiSlider-rail": { color: "blue" },
+                  }}
+                  getAriaLabel={() => "price range"}
+                  defaultValue={12000}
+                  color="primary"
+                  value={price}
+                  onChange={handlePriceChange}
+                  valueLabelDisplay="auto"
+                  getAriaValueText={valueText}
+                  max={400000}
+                  min={0}
+                />
+                <Button
+                  size="small"
+                  onClick={() => {
+                    handleIsClicked("isClickedPrice");
+                  }}
+                >
+                  x
+                </Button>
+              </FormControl>
+            )
+          )}
+        </Box>
 
-      <Button
-        className="submit-btn"
-        sx={{}}
-        onClick={() => {
-          handleSubmit();
-        }}
-      >
-        Submit
-      </Button>
-      <Button
-        className="submit-btn"
-        sx={{}}
-        onClick={() => {
-          handleReset();
-        }}
-      >
-        reset
-      </Button>
-    </Box>
+        <Button
+          className="submit-btn"
+          sx={{}}
+          onClick={() => {
+            handleSubmit();
+          }}
+        >
+          Submit
+        </Button>
+        <Button
+          className="submit-btn"
+          sx={{}}
+          onClick={() => {
+            handleReset();
+          }}
+        >
+          reset
+        </Button>
+        {/* </Box> */}
+      </Grid>
+    </Container>
   );
 };

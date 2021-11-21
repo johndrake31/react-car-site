@@ -3,6 +3,7 @@ import Header from "../../components/header/Header";
 import { CarFilter } from "../../components/formsMenus/carFilter/index";
 import { CarCard } from "../carCard/CarCard";
 import { ICarPublication } from "../../types/ICarPublication";
+import { Grid } from "@mui/material";
 
 export const HomePage: React.FC = () => {
   const [cars, setCars] = useState<ICarPublication[]>([
@@ -65,8 +66,14 @@ export const HomePage: React.FC = () => {
         onFilterChange={handleCarFilterChange}
         onReset={handleCarFilterReset}
       />
-
-      {cars && cars.map((car, key) => <CarCard key={key} carObj={car} />)}
+      <Grid container alignItems="center" spacing={2} sx={{ m: 1 }}>
+        {cars &&
+          cars.map((car, key) => (
+            <Grid key={key} item lg={3}>
+              <CarCard carObj={car} />
+            </Grid>
+          ))}
+      </Grid>
     </>
   );
 };
