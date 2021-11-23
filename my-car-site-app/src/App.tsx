@@ -1,12 +1,12 @@
 import React from "react";
 import "./App.css";
 
-import {HomePage} from "./components/homePage/HomePage";
+import { CcasRouter } from "./router";
 
 function App() {
   return (
     <>
-      <HomePage/>
+      <CcasRouter />
     </>
   );
 }

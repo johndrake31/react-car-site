@@ -1,6 +1,7 @@
 import { ICarPublication } from "../types/ICarPublication";
 import { ICarSearch } from "../types/ICarSearch";
 
+
 export const filterNewSet = (arr: any[], key: string) => {
   const tempTable = arr.map((it: any) => it[key]);
   const something: any = [...new Set(tempTable.map((it) => it.toLowerCase()))];
@@ -36,9 +37,9 @@ export const sortHighLow = (num1: number, num2: number) => {
  * @param carArr 
  * @returns filterTable
  */
-export const filterCars = (searchObj: ICarSearch, carArr: ICarPublication[])=> {
+export const filterCars = (searchObj: ICarSearch, carArr: ICarPublication[]) => {
   let filterTable = [...carArr];
-  
+
   let {
     brand,
     model,
@@ -54,24 +55,24 @@ export const filterCars = (searchObj: ICarSearch, carArr: ICarPublication[])=> {
     );
   }
   // if model is set do the 2nd filter by model
-  
+
   if (model) {
     filterTable = filterTable.filter((carAd: ICarPublication) =>
       carAd.model.toLowerCase() === model.toLowerCase()
     );
   }
-  
+
   // if fuelType is set do the 3rd filter toLowerCase
 
   if (fuelType) {
     filterTable = filterTable.filter((carAd: ICarPublication) => carAd.fuel.toLowerCase() === fuelType.toLowerCase())
   }
- 
+
   // if year is set do the 4th filter
 
   if (years) {
     filterTable = filterTable.filter((carAd: ICarPublication) =>
-      +carAd.year.slice(0,4) >= years[0] && +carAd.year.slice(0,4) <= years[1]
+      +carAd.year.slice(0, 4) >= years[0] && +carAd.year.slice(0, 4) <= years[1]
     );
   }
 
@@ -91,9 +92,5 @@ export const filterCars = (searchObj: ICarSearch, carArr: ICarPublication[])=> {
     );
   }
 
-  // Testing logs
-  console.log(carArr);
-  console.log(filterTable);
-  
   return filterTable;
 }
